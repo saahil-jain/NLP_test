@@ -160,10 +160,12 @@ def beam_search_decode(model, src, src_mask, max_len, start_symbol, beam_size, e
         ### YOUR CODE GOES HERE ########
         ################################
         ################################
+        if beam_size == 1:
+            return greedy_decode(model, src, src_mask, max_len, start_symbol)
+        
         scores_expanded = scores.unsqueeze(1).expand(beam_size, vocab_size)
         combined_scores = scores_expanded + torch.log(prob)
 
-        # 2. Use these scores to construct variable ys, which is the best beam_size number of sequences so far.
         _, indices = combined_scores.view(-1).topk(beam_size)
         next_words = indices % vocab_size
         parent_sequences = indices // vocab_size
