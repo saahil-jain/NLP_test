@@ -160,9 +160,24 @@ def beam_search_decode(model, src, src_mask, max_len, start_symbol, beam_size, e
         ### YOUR CODE GOES HERE ########
         ################################
         ################################
-        
-        
-        raise NotImplementedError
+        scores_expanded = scores.unsqueeze(1).expand(beam_size, vocab_size)
+        combined_scores = scores_expanded + torch.log(prob)
+
+        # 2. Use these scores to construct variable ys, which is the best beam_size number of sequences so far.
+        _, indices = combined_scores.view(-1).topk(beam_size)
+        next_words = indices % vocab_size
+        parent_sequences = indices // vocab_size
+
+        new_ys = torch.zeros(beam_size, ys.size(1) + 1).type_as(src.data).cuda()
+        new_scores = torch.zeros(beam_size).cuda()
+
+        for j in range(beam_size):
+            new_ys[j, :ys.size(1)] = ys[parent_sequences[j]]
+            new_ys[j, -1] = next_words[j]
+            new_scores[j] = scores[indices[j] // vocab_size]
+
+        ys = new_ys
+        scores = new_scores
         
         
         ### YOUR CODE ENDS HERE #######
