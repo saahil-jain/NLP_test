@@ -160,26 +160,14 @@ def beam_search_decode(model, src, src_mask, max_len, start_symbol, beam_size, e
         ### YOUR CODE GOES HERE ########
         ################################
         ################################
-        if beam_size == 1:
-            return greedy_decode(model, src, src_mask, max_len, start_symbol)
-        
-        scores_expanded = scores.unsqueeze(1).expand(beam_size, vocab_size)
-        combined_scores = scores_expanded + torch.log(prob)
-
-        _, indices = combined_scores.view(-1).topk(beam_size)
-        next_words = indices % vocab_size
-        parent_sequences = indices // vocab_size
-
-        new_ys = torch.zeros(beam_size, ys.size(1) + 1).type_as(src.data).cuda()
-        new_scores = torch.zeros(beam_size).cuda()
-
-        for j in range(beam_size):
-            new_ys[j, :ys.size(1)] = ys[parent_sequences[j]]
-            new_ys[j, -1] = next_words[j]
-            new_scores[j] = scores[indices[j] // vocab_size]
-
-        ys = new_ys
-        scores = new_scores
+                
+        total_scores = scores.unsqueeze(1) + prob
+        scores, top_idxs = total_scores.view(-1).topk(beam_size, largest=True)
+        beam_idxs = top_idxs // vocab_size
+        next_words = top_idxs % vocab_size
+        ys = torch.cat([ys[beam_idxs], next_words.unsqueeze(1)], dim=1)
+        finished = (ys[:, -2] == end_idx).nonzero(as_tuple=True)[0]
+        # ys[finished, -1] = end_idx        
         
         
         ### YOUR CODE ENDS HERE #######
