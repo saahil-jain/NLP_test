@@ -166,9 +166,7 @@ def beam_search_decode(model, src, src_mask, max_len, start_symbol, beam_size, e
         beam_idxs = top_idxs // vocab_size
         next_words = top_idxs % vocab_size
         ys = torch.cat([ys[beam_idxs], next_words.unsqueeze(1)], dim=1)
-        finished = (ys[:, -2] == end_idx).nonzero(as_tuple=True)[0]
-        # ys[finished, -1] = end_idx        
-        
+        finished = (ys[:, -2] == end_idx).nonzero(as_tuple=True)[0]        
         
         ### YOUR CODE ENDS HERE #######
         
