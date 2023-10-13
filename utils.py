@@ -162,11 +162,10 @@ def beam_search_decode(model, src, src_mask, max_len, start_symbol, beam_size, e
         ################################
                 
         total_scores = scores.unsqueeze(1) + prob
-        scores, top_idxs = total_scores.view(-1).topk(beam_size, largest=True)
-        beam_idxs = top_idxs // vocab_size
-        next_words = top_idxs % vocab_size
+        scores, indices = total_scores.view(-1).topk(beam_size, largest=True)
+        beam_idxs = indices // vocab_size
+        next_words = indices % vocab_size
         ys = torch.cat([ys[beam_idxs], next_words.unsqueeze(1)], dim=1)
-        finished = (ys[:, -2] == end_idx).nonzero(as_tuple=True)[0]        
         
         ### YOUR CODE ENDS HERE #######
         
