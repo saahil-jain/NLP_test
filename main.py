@@ -541,10 +541,10 @@ if __name__ == "__main__":
     load_trained_model(args)
     
     # # Testing different beam sizes
-    Bleu_Scores = []
-    for i in range(1,6):
-        _, results, score = run_model_eval(args.beam_search, beam_size=i, verbose=True)
-        Bleu_Scores.append(score)
+    # Bleu_Scores = []
+    # for i in range(1,6):
+    #     _, results, score = run_model_eval(args.beam_search, beam_size=i, verbose=True)
+    #     Bleu_Scores.append(score)
 
     _, results, score = run_model_eval(args.beam_search, args.beam_size, verbose=True)
     print("Bleu Score: ", score)
