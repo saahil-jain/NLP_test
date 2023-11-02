@@ -1,0 +1,12 @@
+["I", "just", "went", "to", "the", "mall", "to", "buy", "a", "table"]
+["I", "just", "went", "to", "the", "mall", "to", "buy", "a", "knife"]
+["I", "just", "went", "to", "the", "mall", "to", "buy", "a", "desk"]
+
+predictions = ["I just went to the mall to buy a table."]
+references = [["I just went to the mall to buy a knife."]]
+bleu = evaluate.load("bleu")
+results = bleu.compute(predictions=predictions, references=references)
+print(results)
+
+
+Bleu Score: 37.90094470217938
