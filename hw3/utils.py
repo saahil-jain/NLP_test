@@ -217,7 +217,6 @@ def custom_transform(example):
     for i, sentence in enumerate(sentences):
         new_sentence = generate_synonyms(sentence)
         new_sentence = generate_typing_errors(new_sentence)
-        new_sentence = generate_switched_letters(new_sentence)
         new_sentence = switch_US_and_UK_english(new_sentence)
         new_sentences.append(new_sentence)
 
