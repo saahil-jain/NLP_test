@@ -111,15 +111,16 @@ def create_augmented_dataloader(args, dataset):
     # dataloader will be for the original training split augmented with 5k random transformed examples from the training set.
     # You may find it helpful to see how the dataloader was created at other place in this code.
     transformed_dataset = dataset["train"]
+    transformed_dataset = transformed_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
 
     augmented_dataset = dataset["train"].shuffle(seed=42).select(range(5000))
     augmented_dataset = augmented_dataset.map(custom_transform, load_from_cache_file=False)
+    augmented_dataset = augmented_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
 
 
     from torch.utils.data import ConcatDataset
     augmented_train = ConcatDataset([transformed_dataset, augmented_dataset])
 
-    augmented_train = augmented_train.map(tokenize_function, batched=True, load_from_cache_file=False)
     augmented_train = augmented_train.remove_columns(["text"])
     augmented_train = augmented_train.rename_column("label", "labels")
     augmented_train.set_format("torch")
