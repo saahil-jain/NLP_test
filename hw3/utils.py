@@ -190,7 +190,7 @@ def switch_US_and_UK_english(sentence):
     word_ending_keys = set(word_ending_replacement.keys())
     
     words = sentence.split()
-    new_words = words
+    new_words = [word for word in words]
     for i, word in enumerate(words):
         if word in spelling_replacement_keys:
             new_words[i] = spelling_replacements[word]
@@ -216,9 +216,9 @@ def custom_transform(example):
 
     for i, sentence in enumerate(sentences):
         new_sentence = generate_synonyms(sentence)
-        # new_sentence = generate_typing_errors(new_sentence)
-        # new_sentence = switch_US_and_UK_english(new_sentence)
-        new_sentences.append(new_sentence)
+        new_sentence = generate_typing_errors(new_sentence)
+        new_sentence = switch_US_and_UK_english(new_sentence)
+        new_sentences[i] = new_sentence
 
     example["text"] = ". ".join(new_sentences)
     ##### YOUR CODE ENDS HERE ######
