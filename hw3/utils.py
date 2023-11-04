@@ -98,7 +98,7 @@ def get_synonyms(word):
 
 def generate_synonyms(sentence):
     words = sentence.split()
-    new_words = words
+    new_words = [word for word in words]
 
     max_replacements = 3
     replacements_complete = 0
@@ -216,8 +216,8 @@ def custom_transform(example):
 
     for i, sentence in enumerate(sentences):
         new_sentence = generate_synonyms(sentence)
-        new_sentence = generate_typing_errors(new_sentence)
-        new_sentence = switch_US_and_UK_english(new_sentence)
+        # new_sentence = generate_typing_errors(new_sentence)
+        # new_sentence = switch_US_and_UK_english(new_sentence)
         new_sentences.append(new_sentence)
 
     example["text"] = ". ".join(new_sentences)
