@@ -4,10 +4,48 @@ ssh sbj7913@greene.hpc.nyu.edu
 
 ssh burst
 
-srun --account=ds_ga_1011-2023fa --partition=n1s8-v100-1 --gres=gpu:v100:1 --time=08:00:00 --pty /bin/bash
+srun --account=ds_ga_1011-2023fa --partition=n1s8-v100-1 --gres=gpu:v100:1 --time=02:00:00 --pty /bin/bash
 
 cd ~
 
 singularity exec --nv --bind /scratch --nv --overlay /scratch/sbj7913/overlay-25GB-500K.ext3:rw /scratch/sbj7913/cuda11.7.99-cudnn8.5-devel-ubuntu22.04.2.sif /bin/bash
 
 conda activate nlp
+
+cd NLP_test/hw3
+git pull
+
+
+
+ssh sbj7913@gw.hpc.nyu.edu
+ssh sbj7913@greene.hpc.nyu.edu
+ssh burst
+srun --account=ds_ga_1011-2023fa --partition=n1s8-v100-1 --gres=gpu:v100:1 --time=02:00:00 --pty /bin/bash
+cd /scratch/sbj7913
+scp greene-dtn:/scratch/work/public/overlay-fs-ext3/overlay-25GB-500K.ext3.gz .
+gunzip -vvv ./overlay-25GB-500K.ext3.gz
+scp -rp greene-dtn:/scratch/work/public/singularity/cuda11.7.99-cudnn8.5-devel-ubuntu22.04.2.sif .
+singularity exec --bind /scratch --nv --overlay /scratch/sbj7913/overlay-25GB-500K.ext3:rw /scratch/sbj7913/cuda11.7.99-cudnn8.5-devel-ubuntu22.04.2.sif /bin/bash
+cd /ext3/
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
+bash ./Miniconda3-latest-Linux-x86_64.sh
+
+/ext3/miniconda3
+
+source /ext3/miniconda3/etc/profile.d/conda.sh
+export PATH=/ext3/miniconda3/bin:$PATH
+export SCRATCH=/scratch/sbj7913
+mkdir $SCRATCH/.cache
+mkdir $SCRATCH/.conda
+cd ~
+rm -rfv .conda
+rm -rfv .cache
+ln -s $SCRATCH/.conda ./
+ln -s $SCRATCH/.cache ./
+ls -l .conda
+
+du -sh /ext3/
+
+conda create -n nlp python=3.8
+conda activate nlp
+pip install -r requirements.txt

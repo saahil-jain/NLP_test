@@ -1,8 +1,8 @@
 ## Set up environment
 We recommend you to set up a conda environment for packages used in this homework.
 ```
-conda create -n 2590-hw3 python=3.8
-conda activate 2590-hw3
+conda create -n nlp python=3.8
+conda activate nlp
 pip install -r requirements.txt
 ```
 
