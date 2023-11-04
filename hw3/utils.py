@@ -45,7 +45,7 @@ def parse_and_switch(sentence):
     return ' '.join(switched_words)
 
 def generate_typing_errors(sentence):
-    percent = 0.005
+    percent = 0.01
     sentence = parse_and_switch(sentence)
     alternate_characters = {
         'q': ['w'], 
