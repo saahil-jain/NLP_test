@@ -125,6 +125,7 @@ def create_augmented_dataloader(args, dataset):
     augmented_dataset_tokenized = augmented_dataset_tokenized.rename_column("label", "labels")
     augmented_dataset_tokenized.set_format("torch")
 
+    from torch.utils.data import ConcatDataset
     combined_dataset = ConcatDataset([train_dataset_tokenized, augmented_dataset_tokenized])
     train_dataloader = DataLoader(combined_dataset, batch_size=args.batch_size, shuffle=True)
 
