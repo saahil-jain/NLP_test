@@ -114,13 +114,15 @@ def create_augmented_dataloader(args, dataset):
     augmented_dataset = dataset["train"].shuffle(seed=42).select(range(5000))
     augmented_dataset = augmented_dataset.map(custom_transform, load_from_cache_file=False)
 
-    augmented_train = transformed_dataset + augmented_dataset
+    from datasets import Dataset
+    augmented_train = Dataset.concatenate((transformed_dataset, augmented_dataset))
+
 
     print(transformed_dataset.shape)
     print(augmented_dataset.shape)
     print(augmented_train.shape)
 
-    augmented_train = Dataset.concat([transformed_dataset, augmented_dataset]).shuffle(seed=42).select(range(50))
+    augmented_train = augmented_train.shuffle(seed=42).select(range(50))
     print(augmented_train.shape)
 
 
