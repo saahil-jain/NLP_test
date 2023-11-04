@@ -212,7 +212,7 @@ def custom_transform(example):
 
     # You should update example["text"] using your transformation
     sentences = example["text"].split(". ")
-    new_sentences = sentences
+    new_sentences = [sentence for sentence in sentences]
 
     for i, sentence in enumerate(sentences):
         new_sentence = generate_synonyms(sentence)
