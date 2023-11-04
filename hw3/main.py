@@ -116,7 +116,7 @@ def create_augmented_dataloader(args, dataset):
     transformed_dataset = transformed_dataset.rename_column("label", "labels")
     transformed_dataset.set_format("torch")
 
-    augmented_dataset = dataset["train"].shuffle(seed=42).select(range(5000))
+    augmented_dataset = dataset["train"].shuffle(seed=42).select(range(50))
     augmented_dataset = augmented_dataset.map(custom_transform, load_from_cache_file=False)
     augmented_dataset = augmented_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
     augmented_dataset = augmented_dataset.remove_columns(["text"])
@@ -127,7 +127,13 @@ def create_augmented_dataloader(args, dataset):
     from torch.utils.data import ConcatDataset
     augmented_train = ConcatDataset([transformed_dataset, augmented_dataset])
 
-    train_dataloader = DataLoader(augmented_train, batch_size=args.batch_size)
+    print(dataset.shape)
+    print(transformed_dataset.shape)
+    print(augmented_dataset.shape)
+    print(augmented_train.shape)
+
+
+    train_dataloader = DataLoader(augmented_dataset, batch_size=args.batch_size)
 
     ##### YOUR CODE ENDS HERE ######
 
