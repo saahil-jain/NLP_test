@@ -111,7 +111,7 @@ def generate_synonyms(sentence):
                 synonyms = get_synonyms(word)
                 if len(synonyms)>0:
                     replacement = random.choice(synonyms)
-                    replacements_made += 1
+                    replacements_complete += 1
         new_words[i] = replacement
 
     return " ".join(new_words)
