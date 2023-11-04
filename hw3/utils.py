@@ -27,7 +27,7 @@ def example_transform(example):
 # You can randomly select each word with some fixed probability, and replace random letters in that word with one of the
 # nearest keys on the keyboard. You can vary the random probablity or which letters to use to achieve the desired accuracy.
 def switch_letters(word):
-    if len(word) < 2 or random.random() > 0.1:
+    if len(word) < 2 or random.random() < 0.7:
         return word
 
     positions = random.sample(range(len(word)), 2)
@@ -79,7 +79,7 @@ def generate_typing_errors(sentence):
     transformed_sentence = sentence
 
     for i, letter in enumerate(sentence):
-        if letter in editable_characters and random.random() <= 0.005:
+        if letter in editable_characters and random.random() <= 0.04:
             replacement_letter = random.choice(alternate_characters[letter])
             transformed_sentence = transformed_sentence[:i] + replacement_letter + transformed_sentence[i + 1:]
 
@@ -107,7 +107,7 @@ def generate_synonyms(sentence):
 
         replacement = word
         if replacements_complete < max_replacements and len(word) > 2:
-            if random.random() <= 0.2:
+            if random.random() <= 0.5:
                 synonyms = get_synonyms(word)
                 if len(synonyms)>0:
                     replacement = random.choice(synonyms)
@@ -117,7 +117,7 @@ def generate_synonyms(sentence):
     return " ".join(new_words)
 
 def switch_US_and_UK_english(sentence):
-    if random.random() <= 0.2:
+    if random.random() <= 0.5:
         return sentence
     
     spelling_replacements = {
