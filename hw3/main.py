@@ -117,6 +117,7 @@ def create_augmented_dataloader(args, dataset):
     transformed_dataset.set_format("torch")
 
     augmented_dataset = dataset["train"].shuffle(seed=42).select(range(50))
+    print(augmented_dataset)
     augmented_dataset = augmented_dataset.map(custom_transform, load_from_cache_file=False)
     augmented_dataset = augmented_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
     augmented_dataset = augmented_dataset.remove_columns(["text"])
