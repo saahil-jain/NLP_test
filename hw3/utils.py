@@ -230,7 +230,7 @@ def custom_transform(example):
     return example
 
 # Example usage
-american_sentence = {}
-american_sentence['text'] = "I love the color of your car, it's my favorite. Let's organize a theater event."
-british_sentence = custom_transform(american_sentence)['text']
-print(british_sentence)
+# american_sentence = {}
+# american_sentence['text'] = "I love the color of your car, it's my favorite. Let's organize a theater event."
+# british_sentence = custom_transform(american_sentence)['text']
+# print(british_sentence)
