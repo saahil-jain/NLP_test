@@ -111,22 +111,23 @@ def create_augmented_dataloader(args, dataset):
     # dataloader will be for the original training split augmented with 5k random transformed examples from the training set.
     # You may find it helpful to see how the dataloader was created at other place in this code.
     train_dataset = dataset["train"]
-    train_dataset_tokenized = train_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
-    train_dataset_tokenized = train_dataset_tokenized.remove_columns(["text"])
-    train_dataset_tokenized = train_dataset_tokenized.rename_column("label", "labels")
-    train_dataset_tokenized.set_format("torch")
-
-
-    num_augmented_examples = 5000
-    augmented_dataset = train_dataset.shuffle(seed=42).select(range(num_augmented_examples))
+    augmented_dataset = train_dataset.shuffle(seed=42).select(range(15000))
     augmented_dataset = augmented_dataset.map(custom_transform, load_from_cache_file=False)
-    augmented_dataset_tokenized = augmented_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
-    augmented_dataset_tokenized = augmented_dataset_tokenized.remove_columns(["text"])
-    augmented_dataset_tokenized = augmented_dataset_tokenized.rename_column("label", "labels")
-    augmented_dataset_tokenized.set_format("torch")
+
+    train_data_tokenized = train_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
+    augmented_data_tokenized = augmented_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
+
+    train_data_tokenized = train_data_tokenized.remove_columns(["text"])
+    augmented_data_tokenized = augmented_data_tokenized.remove_columns(["text"])
+
+    train_data_tokenized = train_data_tokenized.rename_column("label", "labels")
+    augmented_data_tokenized = augmented_data_tokenized.rename_column("label", "labels")
+
+    train_data_tokenized.set_format("torch")
+    augmented_data_tokenized.set_format("torch")
 
     from torch.utils.data import ConcatDataset
-    combined_dataset = ConcatDataset([train_dataset_tokenized, augmented_dataset_tokenized])
+    combined_dataset = ConcatDataset([train_data_tokenized, augmented_data_tokenized])
     train_dataloader = DataLoader(combined_dataset, batch_size=args.batch_size, shuffle=True)
 
     ##### YOUR CODE ENDS HERE ######
