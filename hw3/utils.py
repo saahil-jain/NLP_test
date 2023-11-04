@@ -79,7 +79,7 @@ def generate_typing_errors(sentence):
     transformed_sentence = sentence
 
     for i, letter in enumerate(sentence):
-        if letter in editable_characters and random.random() <= 0.01:
+        if letter in editable_characters and random.random() <= 0.005:
             replacement_letter = random.choice(alternate_characters[letter])
             transformed_sentence = transformed_sentence[:i] + replacement_letter + transformed_sentence[i + 1:]
 
