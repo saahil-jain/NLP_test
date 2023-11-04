@@ -111,27 +111,24 @@ def create_augmented_dataloader(args, dataset):
     # dataloader will be for the original training split augmented with 5k random transformed examples from the training set.
     # You may find it helpful to see how the dataloader was created at other place in this code.
     transformed_dataset = dataset["train"]
-    transformed_dataset = transformed_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
-    transformed_dataset = transformed_dataset.remove_columns(["text"])
-    transformed_dataset = transformed_dataset.rename_column("label", "labels")
-    transformed_dataset.set_format("torch")
-
-    augmented_dataset = dataset["train"].shuffle(seed=42).select(range(50))
-    print(augmented_dataset)
+    augmented_dataset = dataset["train"].shuffle(seed=42).select(range(5000))
     augmented_dataset = augmented_dataset.map(custom_transform, load_from_cache_file=False)
-    augmented_dataset = augmented_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
-    augmented_dataset = augmented_dataset.remove_columns(["text"])
-    augmented_dataset = augmented_dataset.rename_column("label", "labels")
-    augmented_dataset.set_format("torch")
 
+    from datasets import Dataset
+    augmented_train = Dataset.concat([transformed_dataset, augmented_dataset])
 
-    from torch.utils.data import ConcatDataset
-    augmented_train = ConcatDataset([transformed_dataset, augmented_dataset])
-
-    print(dataset.shape)
     print(transformed_dataset.shape)
     print(augmented_dataset.shape)
     print(augmented_train.shape)
+
+    augmented_train = Dataset.concat([transformed_dataset, augmented_dataset]).shuffle(seed=42).select(range(50))
+    print(augmented_train.shape)
+
+
+    augmented_train = augmented_train.map(tokenize_function, batched=True, load_from_cache_file=False)
+    augmented_train = augmented_train.remove_columns(["text"])
+    augmented_train = augmented_train.rename_column("label", "labels")
+    augmented_train.set_format("torch")
 
 
     train_dataloader = DataLoader(augmented_dataset, batch_size=args.batch_size)
