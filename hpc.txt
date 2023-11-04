@@ -1,0 +1,13 @@
+ssh sbj7913@gw.hpc.nyu.edu
+
+ssh sbj7913@greene.hpc.nyu.edu
+
+ssh burst
+
+srun --account=ds_ga_1011-2023fa --partition=n1s8-v100-1 --gres=gpu:v100:1 --time=08:00:00 --pty /bin/bash
+
+cd ~
+
+singularity exec --nv --bind /scratch --nv --overlay /scratch/sbj7913/overlay-25GB-500K.ext3:rw /scratch/sbj7913/cuda11.7.99-cudnn8.5-devel-ubuntu22.04.2.sif /bin/bash
+
+conda activate nlp
