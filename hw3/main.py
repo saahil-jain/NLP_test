@@ -115,7 +115,8 @@ def create_augmented_dataloader(args, dataset):
     augmented_dataset = augmented_dataset.map(custom_transform, load_from_cache_file=False)
 
     from datasets import Dataset
-    augmented_train = Dataset.concatenate((transformed_dataset, augmented_dataset))
+    augmented_train = transformed_dataset['train'] + augmented_dataset['train']
+    augmented_train = Dataset.from_dict({'train': augmented_train})
 
 
     print(transformed_dataset.shape)
