@@ -114,11 +114,8 @@ def create_augmented_dataloader(args, dataset):
     augmented_dataset = dataset["train"].shuffle(seed=42).select(range(5000))
     augmented_dataset = augmented_dataset.map(custom_transform, load_from_cache_file=False)
 
-    from datasets import Dataset
-    augmented_train = Dataset.from_dict({
-        'text': transformed_dataset['text'] + augmented_dataset['text'],
-        'label': transformed_dataset['label'] + augmented_dataset['label']
-    })
+    from datasets import concatenate_datasets
+    augmented_train = concatenate_datasets([transformed_dataset, augmented_dataset])
 
 
     print(transformed_dataset.shape)
@@ -133,6 +130,8 @@ def create_augmented_dataloader(args, dataset):
     augmented_train = augmented_train.remove_columns(["text"])
     augmented_train = augmented_train.rename_column("label", "labels")
     augmented_train.set_format("torch")
+
+    print(augmented_train.shape)
 
 
     train_dataloader = DataLoader(augmented_dataset, batch_size=args.batch_size)
