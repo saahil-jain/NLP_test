@@ -15,6 +15,14 @@ conda activate nlp
 cd NLP_test/hw3
 git pull
 
+python3 main.py --train augmented --eval transformed
+python3 main.py --eval --model_dir out_augmented
+python3 main.py --eval_transformed --model_dir out_augmented
+
+Score:  {'accuracy': 0.929}
+Score:  {'accuracy': 0.8816}
+Score:  {'accuracy': 0.89824}
+
 
 
 ssh sbj7913@gw.hpc.nyu.edu
