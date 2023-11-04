@@ -110,31 +110,23 @@ def create_augmented_dataloader(args, dataset):
     # Here, 'dataset' is the original dataset. You should return a dataloader called 'train_dataloader' -- this
     # dataloader will be for the original training split augmented with 5k random transformed examples from the training set.
     # You may find it helpful to see how the dataloader was created at other place in this code.
-    transformed_dataset = dataset["train"]
-    augmented_dataset = dataset["train"].shuffle(seed=42).select(range(5000))
+    train_dataset = dataset["train"]
+    train_dataset_tokenized = train_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
+    train_dataset_tokenized = train_dataset_tokenized.remove_columns(["text"])
+    train_dataset_tokenized = train_dataset_tokenized.rename_column("label", "labels")
+    train_dataset_tokenized.set_format("torch")
+
+
+    num_augmented_examples = 5000
+    augmented_dataset = train_dataset.shuffle(seed=42).select(range(num_augmented_examples))
     augmented_dataset = augmented_dataset.map(custom_transform, load_from_cache_file=False)
+    augmented_dataset_tokenized = augmented_dataset.map(tokenize_function, batched=True, load_from_cache_file=False)
+    augmented_dataset_tokenized = augmented_dataset_tokenized.remove_columns(["text"])
+    augmented_dataset_tokenized = augmented_dataset_tokenized.rename_column("label", "labels")
+    augmented_dataset_tokenized.set_format("torch")
 
-    from datasets import concatenate_datasets
-    augmented_train = concatenate_datasets([transformed_dataset, augmented_dataset])
-
-
-    print(transformed_dataset.shape)
-    print(augmented_dataset.shape)
-    print(augmented_train.shape)
-
-    augmented_train = augmented_train.shuffle(seed=42).select(range(50))
-    print(augmented_train.shape)
-
-
-    augmented_train = augmented_train.map(tokenize_function, batched=True, load_from_cache_file=False)
-    augmented_train = augmented_train.remove_columns(["text"])
-    augmented_train = augmented_train.rename_column("label", "labels")
-    augmented_train.set_format("torch")
-
-    print(augmented_train.shape)
-
-
-    train_dataloader = DataLoader(augmented_dataset, batch_size=args.batch_size)
+    combined_dataset = ConcatDataset([train_dataset_tokenized, augmented_dataset_tokenized])
+    train_dataloader = DataLoader(combined_dataset, batch_size=args.batch_size, shuffle=True)
 
     ##### YOUR CODE ENDS HERE ######
 
