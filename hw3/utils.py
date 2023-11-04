@@ -27,7 +27,7 @@ def example_transform(example):
 # You can randomly select each word with some fixed probability, and replace random letters in that word with one of the
 # nearest keys on the keyboard. You can vary the random probablity or which letters to use to achieve the desired accuracy.
 def switch_letters(word):
-    percent = 0.15
+    percent = 0.10
     if len(word) < 2 or random.random() < 1-percent:
         return word
 
@@ -45,7 +45,7 @@ def parse_and_switch(sentence):
     return ' '.join(switched_words)
 
 def generate_typing_errors(sentence):
-    percent = 0.002
+    percent = 0.005
     sentence = parse_and_switch(sentence)
     alternate_characters = {
         'q': ['w'], 
@@ -120,7 +120,7 @@ def generate_synonyms(sentence):
     return " ".join(new_words)
 
 def switch_US_and_UK_english(sentence):
-    percent = 0.15
+    percent = 0.2
     if random.random() < 1-percent:
         return sentence
     
