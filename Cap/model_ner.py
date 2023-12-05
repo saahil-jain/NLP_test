@@ -21,6 +21,7 @@ def to_list(sample):
     sample['labels'] = ast.literal_eval(sample['labels'])
     return sample
 
+seed = 1
 data = load_dataset('csv', data_files='data.csv')
 data = data.map(to_list)
 data = data['train'].train_test_split(test_size=0.2, seed=seed)
