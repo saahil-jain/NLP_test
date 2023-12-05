@@ -145,7 +145,7 @@ args = TrainingArguments(
     learning_rate=2e-5,
     num_train_epochs=3,
     weight_decay=0.01,
-    push_to_hub=True,
+    push_to_hub=False,
 )
 
 trainer = Trainer(
